@@ -11,4 +11,9 @@ urlpatterns = patterns('',
     url(r'^logout_do/', views.logout_do, name='logout_do'),
     url(r'^reserve/', views.reserve, name='reserve'),
     url(r'^accept/', views.accept, name='accept'),
+    url(r'^cancel_res/', views.cancel_res, name='cancel_res'),
+    url(r'^revoke/', views.revoke, name='revoke'),
+    url(r'^search_do/', views.search_do, name='search_do'),
+    url(r'^edit_post/', views.edit_post, name='edit_post'),
+    
 )

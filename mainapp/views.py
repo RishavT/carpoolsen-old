@@ -198,22 +198,158 @@ def accept(request):
         return HttpResponse(e)
     return HttpResponse("done")
 
-def revoke_res(request):
-    #revoke permission from rider
-    #opposite of accept
-    #called by owner
-    pass
+def revoke(request):
+    #if request.method == 'GET':
+        #return HttpResponse('invalid request')
+        
+    #check for user login
+    if not request.user.is_authenticated():
+        return HttpResponse("need to log in")
+    try:
+        request.user.rider
+    except:
+        return HttpResponse("no rider associated")
+    try:
+        owner = request.user.rider
+        resid = request.REQUEST['resid']
+        try:
+            Reserved.objects.get(pk=resid)
+        except Exception as e:
+            return HttpResponse(e)
+        resobj = Reserved.objects.get(pk=resid)
+        
+        #postobj = resobj.post
+        #if postobj.total_seats > postobj.reserved_set.aggregate(Sum('status'))['status__sum']:
+            #resobj.status = 1
+            #resobj.save()
+        if resobj.status == 1:
+            resobj.status = 0
+            resobj.save()
+        else:
+            return HttpResponse("Already revoked/pending.")
+    except Exception as e:
+        return HttpResponse(e)
+    return HttpResponse("done")
 
 def cancel_res(request):
-    #cancel reservation
-    #called by rider
-    #opposite of reserve
-    pass
+    #if request.method == 'GET':
+        #return HttpResponse('invalid request')
+        
+    #check for user login
+    if not request.user.is_authenticated():
+        return HttpResponse("need to log in")
     
+    try:
+        request.user.rider
+    except:
+        return HttpResponse("no rider associated")
+
+    try:
+        reserver = request.user.rider
+        resid = request.REQUEST['resid']
+        resobj = Reserved.objects.get(pk=resid)
+        
+        if resobj.reserver.pk == reserver.pk:
+            resobj.delete()
+        else:
+            return HttpResponse("invalid user")
+        #entry = Reserved(post = postobj, reserver = reserver)
+        
+    except Exception as e:
+        return HttpResponse(e)
+    return HttpResponse("done")
     
 
 def search_do(request):
-    pass
+    #if request.method == 'GET':
+        #return HttpResponse('invalid request')
+        
+    #check for user login
+    if not request.user.is_authenticated():
+        return HttpResponse("need to log in")
+    
+    try:
+        request.user.rider
+    except:
+        return HttpResponse("no rider associated")
+    
+    fro = request.REQUEST['fro']
+    to = request.REQUEST['to']
+    dtstart = request.REQUEST['dtstart'].split("-")
+    dtend = request.REQUEST['dtend'].split("-")
+    men_women = request.REQUEST['men_women']
+    dtstart = datetime.datetime(year=int(dtstart[0]), month=int(dtstart[1]), day=int(dtstart[2]), hour=int(dtstart[3]),
+                                minute=int(dtstart[4]), second=0, microsecond=0)
+    dtend = datetime.datetime(year=int(dtend[0]), month=int(dtend[1]), day=int(dtend[2]), hour=int(dtend[3]),
+                                minute=int(dtend[4]), second=0, microsecond=0)
+    results = Post.objects.filter(fro=fro, to=to, date_time__lte=dtend, date_time__gte=dtstart, men_women=men_women)
+    return HttpResponse(len(results))
+    
 
 def edit_post(request):
-    pass
+    #if request.method == 'GET':
+        #return HttpResponse('invalid request')
+        
+    #check for user login
+    if not request.user.is_authenticated():
+        return HttpResponse("need to log in")
+    
+    #Get Post
+    owner = request.user.rider
+    postid = request.REQUEST['postid']
+    postobj = None
+    try:
+        postobj = Post.objects.get(pk=postid)
+    except Exception as e:
+        return HttpResponse(e)
+    
+    #Get new details.
+    
+    if postobj.owner.user.username <> owner.user.username:
+        return HttpResponse("You can't edit others posts!!")
+    
+    #owner = request.user.rider
+    car_number = request.REQUEST['car_number']
+    total_seats = int(request.REQUEST['total_seats'])
+    phone = request.REQUEST['phone']
+    fro = request.REQUEST['fro']
+    to = request.REQUEST['to']
+    
+    #Date and time format: yyyy-mm-dd-hh-mm
+    date_time = request.REQUEST['date_time'].split("-")
+    date_time = datetime.datetime(year=int(date_time[0]),
+                                  month=int(date_time[1]),
+                                  day=int(date_time[2]),
+                                  hour=int(date_time[3]), 
+                                  minute=int(date_time[4]),
+                                  second=0, 
+                                  microsecond=0)
+    ac = int(request.REQUEST['ac'])
+    men_women = int(request.REQUEST['men_women'])
+    available_to = int(request.REQUEST['available_to'])
+    
+    #entry = Post(owner=owner, 
+                 #car_number=car_number, 
+                 #total_seats=total_seats, 
+                 #phone=phone, 
+                 #fro=fro, 
+                 #to=to,
+                 #date_time=date_time, 
+                 #ac=ac,
+                 #men_women=men_women,
+                 #available_to=available_to)
+    if total_seats < postobj.reserved_set.aggregate(Sum('status'))['status__sum']:
+        return HttpResponse("You already have more reserved users than seats.")
+    
+    postobj.car_number = car_number
+    postobj.total_seats = total_seats
+    postobj.phone = phone
+    postobj.fro = fro
+    postobj.to = to
+    postobj.date_time = date_time
+    postobj.ac = ac
+    postobj.men_women = men_women
+    postobj.available_to = available_to
+    
+    postobj.save()
+    return HttpResponse("Post edited successfully. Contrary to what people say, Change is NOT good. Please keep edits as minimal as possible")
