@@ -58,11 +58,12 @@ def signup_do(request):
         return HttpResponse(e)
     return HttpResponse("done")
 
-
+#Called when a user clicks logout button.
 def logout_do(request):
     logout(request)
     return HttpResponse("logged out")
     
+#Called when a user clicks login button. 
 def login_do(request):
     
     #if request.method == 'GET':
@@ -71,10 +72,11 @@ def login_do(request):
     username = request.REQUEST['username']
     password = request.REQUEST['password']
     user = authenticate(username=username, password=password)
+    
     if user is not None:
         if user.is_active:
             login(request, user)
-            # Redirect to a success page.
+            # Logged in now. Redirect to a success page.
             return HttpResponse("done")
         else:
             # Return a 'disabled account' error message
@@ -83,18 +85,23 @@ def login_do(request):
         # Return an 'invalid login' error message.
         return HttpResponse("invalid login")
 
+#Called when a user cancels his post
 def cancel_post(request):
     
     #using get for now.
     user = request.user
+    
+    #Not allowed to delete if user is not logged in. Not called, but to take edge cases into consideration.
     if not user.is_authenticated:
         return HttpResponse("Need to log in")
+    
     postid = request.REQUEST['postid']
     #return HttpResponse(postid)
+    
     try:
         entry = Post.objects.get(pk=int(postid))
         if entry.owner.user.pk == user.pk:
-            #Delete reserved entries too
+            #Delete all reserved entries for that post too
             for y in entry.reserved_set.all():
                 #SMS notification
                 y.delete()
@@ -124,7 +131,7 @@ def post_new(request):
     fro = request.REQUEST['fro']
     to = request.REQUEST['to']
     
-    #yyyy-mm-dd-hh-mm
+    #Date and time format: yyyy-mm-dd-hh-mm
     date_time = request.REQUEST['date_time'].split("-")
     date_time = datetime.datetime(year=int(date_time[0]), month=int(date_time[1]), day=int(date_time[2]), hour=int(date_time[3]), minute=int(date_time[4]), second=0, microsecond=0)
     
