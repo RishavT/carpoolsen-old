@@ -62,6 +62,7 @@ def signup_do(request):
 def logout_do(request):
     logout(request)
     return HttpResponse("logged out")
+    
 def login_do(request):
     
     #if request.method == 'GET':
@@ -195,6 +196,7 @@ def revoke_res(request):
     #opposite of accept
     #called by owner
     pass
+
 def cancel_res(request):
     #cancel reservation
     #called by rider
