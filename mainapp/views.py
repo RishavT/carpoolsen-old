@@ -133,14 +133,29 @@ def post_new(request):
     
     #Date and time format: yyyy-mm-dd-hh-mm
     date_time = request.REQUEST['date_time'].split("-")
-    date_time = datetime.datetime(year=int(date_time[0]), month=int(date_time[1]), day=int(date_time[2]), hour=int(date_time[3]), minute=int(date_time[4]), second=0, microsecond=0)
+    date_time = datetime.datetime(year=int(date_time[0]),
+                                  month=int(date_time[1]), 
+                                  day=int(date_time[2]), 
+                                  hour=int(date_time[3]),
+                                  minute=int(date_time[4]), 
+                                  second=0, 
+                                  microsecond=0)
     
     
     ac = int(request.REQUEST['ac'])
     men_women = int(request.REQUEST['men_women'])
     available_to = int(request.REQUEST['available_to'])
     
-    entry = Post(owner=owner, car_number=car_number, total_seats=total_seats, phone=phone, fro=fro, to=to, date_time=date_time, ac=ac,men_women=men_women,available_to=available_to)
+    entry = Post(owner=owner, 
+                 car_number=car_number, 
+                 total_seats=total_seats,
+                 phone=phone, 
+                 fro=fro, 
+                 to=to, 
+                 date_time=date_time, 
+                 ac=ac,
+                 men_women=men_women,
+                 available_to=available_to)
     
     entry.save()
     return HttpResponse("done")
