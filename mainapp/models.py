@@ -87,3 +87,5 @@ class Reserved(models.Model):
     #0 - pending
     #1 - accepted
     status = models.IntegerField(default=0)
+    
+#Here there also exists another table called 'User', provided by Django. It has username, email and password attributes.
