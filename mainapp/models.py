@@ -73,7 +73,7 @@ class Post(models.Model):
         return self.owner.name
     
 
-class Reserve(models.Model):
+class Reserved(models.Model):
     post = models.ForeignKey(Post)
     reserver = models.ForeignKey(Rider)
     #0 - pending
