@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-
+from django.contrib.auth.models import User
 ## Create your models here.
 #class Poll(models.Model):
     #question = models.CharField(max_length=200)
@@ -23,18 +23,26 @@ class Rider(models.Model):
     #current_post = models.ForeignKey(Post)
 
     #dummy = models.IntegerField(default=0)
-    username = models.CharField(max_length=200)
-    
-    name = models.CharField(max_length=200)
+    #username = models.CharField(max_length=200, unique=True)
+    user = models.OneToOneField(User)
+    #name = models.CharField(max_length=200)
     phone = models.CharField(max_length=10)
-    email = models.CharField(max_length=200)
+    #email = models.CharField(max_length=200)
     gender = models.CharField(max_length=1)
     car_number = models.CharField(max_length=20)
+    
+    #0 - PAN
+    #1 - Driving License
+    #2 - Voter Card
+    auth_type = models.IntegerField(default=0)
+    auth_token = models.CharField(max_length=200, default = "")
+    
+    
     user_rating = models.IntegerField(default=5)
     neg_flags = models.IntegerField(default=0)
     
     def __unicode__(self):
-        return self.name
+        return self.user.username
 
 
 class Post(models.Model):
@@ -70,7 +78,7 @@ class Post(models.Model):
     #1 - available to only friends
     available_to = models.IntegerField(default=0)
     def __unicode__(self):
-        return self.owner.name
+        return self.owner.user.username
     
 
 class Reserved(models.Model):
