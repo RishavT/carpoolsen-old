@@ -95,7 +95,7 @@ class Message(models.Model):
     date_time = models.DateTimeField('date_time',default = timezone.now())
     
     
-    #The next two variables denote whether the message is present in the senders and receiver's mailboxes or not.
+    #The next two variables denote whether the message is present in the sender's and receiver's mailboxes or not.
     #1 -> present
     #0 -> The user has deleted.
     #As soon as both become 0, the message will be deleted from the database.
