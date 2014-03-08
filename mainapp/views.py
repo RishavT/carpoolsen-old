@@ -280,8 +280,8 @@ def search_do(request):
         #return HttpResponse('invalid request')
         
     #check for user login
-    if not request.user.is_authenticated():
-        return HttpResponse("need to log in")
+    #if not request.user.is_authenticated():
+        #return HttpResponse("need to log in")
     
     try:
         request.user.rider
