@@ -283,10 +283,10 @@ def search_do(request):
     #if not request.user.is_authenticated():
         #return HttpResponse("need to log in")
     
-    try:
-        request.user.rider
-    except:
-        return HttpResponse("no rider associated")
+    #try:
+        #request.user.rider
+    #except:
+        #return HttpResponse("no rider associated")
     
     fro = request.REQUEST['fro']
     to = request.REQUEST['to']
