@@ -377,9 +377,12 @@ def send_message(request):
     #check for user login
     if not request.user.is_authenticated():
         return HttpResponse("need to log in")
-    
+    sender = None
     try:
         sender = request.user.rider
+    except:
+        return HttpResponse("no rider associated")
+    try:
         receiver = User.objects.get(username=request.REQUEST['to']).rider
         message = request.REQUEST['message']
         
@@ -388,3 +391,60 @@ def send_message(request):
     except Exception as e:
         return HttpResponse(e)
     return HttpResponse("sent")
+
+def view_messages(request):
+    #if request.method == 'GET':
+        #return HttpResponse('invalid request')
+        
+    #check for user login
+    if not request.user.is_authenticated():
+        return HttpResponse("need to log in")
+    rider = None
+    
+    try:
+        rider = request.user.rider
+    except:
+        return HttpResponse("no rider associated")
+    
+    results1 = Message.objects.filter(sender = rider)
+    results2 = Message.objects.filter(receiver = rider)
+    
+    return HttpResponse((len(results1) + len(results2)))
+
+def delete_message(request):
+    #if request.method == 'GET':
+        #return HttpResponse('invalid request')
+        
+    #check for user login
+    if not request.user.is_authenticated():
+        return HttpResponse("need to log in")
+    rider = None
+    
+    try:
+        rider = request.user.rider
+    except:
+        return HttpResponse("no rider associated")
+    
+    mid = request.REQUEST['mid']
+    message = None
+    try:
+        message = Message.objects.get(pk=mid)
+    except:
+        return HttpResponse("No such message exists")
+    
+    if message.sender.pk == rider.pk:
+        message.smailbox = 0
+    if message.receiver.pk == rider.pk:
+        message.rmailbox = 0
+    if message.rmailbox + message.smailbox == 0:
+        #This means the message has been deleted from both the sender and the receiver's side.
+        #The message will be deleted after one month
+        #if message.date_time.month - timezone.now().month >= 1:
+            #message.delete()
+        
+        #For now, message will be deleted. In the future, we may implement restoring of messages, in which case
+        #We will keep the delete after one month feature.
+        message.delete()
+    else:
+        message.save()
+    return HttpResponse("done")

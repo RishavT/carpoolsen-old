@@ -1,5 +1,5 @@
 from django.contrib import admin
-from mainapp.models import Rider,Post,Reserved
+from mainapp.models import *
 
 
 #class ChoiceInline(admin.StackedInline):
@@ -16,4 +16,5 @@ from mainapp.models import Rider,Post,Reserved
 admin.site.register(Rider)
 admin.site.register(Post)
 admin.site.register(Reserved)
+admin.site.register(Message)
 

@@ -15,5 +15,8 @@ urlpatterns = patterns('',
     url(r'^revoke/', views.revoke, name='revoke'),
     url(r'^search_do/', views.search_do, name='search_do'),
     url(r'^edit_post/', views.edit_post, name='edit_post'),
+    url(r'^send_message/', views.send_message, name='send_message'),
+    url(r'^view_messages/', views.view_messages, name='view_messages'),
+    url(r'^delete_message/', views.delete_message, name='delete_message'),
     
 )

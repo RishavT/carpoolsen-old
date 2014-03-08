@@ -89,10 +89,18 @@ class Reserved(models.Model):
     status = models.IntegerField(default=0)
     
 class Message(models.Model):
-    sender = models.ForeignKey(Rider)
-    receiver = models.ForeignKey(Rider)
+    sender = models.ForeignKey(Rider, related_name = 'sender')
+    receiver = models.ForeignKey(Rider, related_name = 'receiver')
     message = models.CharField(max_length=200)
     date_time = models.DateTimeField('date_time',default = timezone.now())
+    
+    
+    #The next two variables denote whether the message is present in the senders and receiver's mailboxes or not.
+    #1 -> present
+    #0 -> The user has deleted.
+    #As soon as both become 0, the message will be deleted from the database.
+    smailbox = models.IntegerField(default=1)
+    rmailbox = models.IntegerField(default=1)
     
     
 #Here there also exists another table called 'User', provided by Django. It has username, email and password attributes.
