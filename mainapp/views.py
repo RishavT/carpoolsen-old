@@ -368,3 +368,23 @@ def edit_post(request):
     
     postobj.save()
     return HttpResponse("Post edited successfully. Contrary to what people say, Change is NOT good. Please keep edits as minimal as possible")
+
+
+def sendmessage(request):
+    #if request.method == 'GET':
+        #return HttpResponse('invalid request')
+        
+    #check for user login
+    if not request.user.is_authenticated():
+        return HttpResponse("need to log in")
+    
+    try:
+        sender = request.user.rider
+        receiver = User.objects.get(username=request.REQUEST['to']).rider
+        message = request.REQUEST['message']
+        
+        entry = Message(sender = sender, receiver = receiver, message = message)
+        entry.save()
+    except Exception as e:
+        return HttpResponse(e)
+    return HttpResponse("sent")

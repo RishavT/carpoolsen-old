@@ -88,4 +88,11 @@ class Reserved(models.Model):
     #1 - accepted
     status = models.IntegerField(default=0)
     
+class Message(models.Model):
+    sender = models.ForeignKey(Rider)
+    receiver = models.ForeignKey(Rider)
+    message = models.CharField(max_length=200)
+    date_time = models.DateTimeField('date_time',default = timezone.now())
+    
+    
 #Here there also exists another table called 'User', provided by Django. It has username, email and password attributes.
