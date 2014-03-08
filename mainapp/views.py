@@ -370,7 +370,7 @@ def edit_post(request):
     return HttpResponse("Post edited successfully. Contrary to what people say, Change is NOT good. Please keep edits as minimal as possible")
 
 
-def sendmessage(request):
+def send_message(request):
     #if request.method == 'GET':
         #return HttpResponse('invalid request')
         
