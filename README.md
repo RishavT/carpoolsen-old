@@ -1,5 +1,9 @@
 carpoolsen
 ==========
+
+CSS ISNT WORKING IN POSTPAGE. PLS ADD REQD LINES.
+TIME IS GIVING THIRD FIELD. DONT KNOW HOW TO REMOVE
+
 To Do:
 
 1. Implement remaining views. check views.py for more info.
